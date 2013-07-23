@@ -12,55 +12,13 @@ window.log = function(){
 
 var totalScore = 0;
 var matchingScore = 100;
-var generateRandom = function (width, height, wallFrequency) {
-
-	var nodes = [
-        [1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,1,1],
-        [1,1,0,0,0,0,0,0,1,1],
-        [1,1,0,0,0,0,0,0,1,1],
-        [1,1,0,0,0,0,0,0,1,1],
-        [1,1,0,0,0,0,0,0,1,1],
-        [1,1,0,0,0,0,0,0,1,1],
-        [1,1,0,0,0,0,0,0,1,1],
-        [1,1,1,1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1,1,1,1]
-    ];
-
-    /*for (var x=0; x < width; x++) {
-    	var nodeRow = [];
-    	var gridRow = [];
-
-    	for(var y=0; y < height; y++) {
-
-    		var isWall = Math.floor(Math.random()*(1/wallFrequency));
-    		if(isWall == 0) {
-    			nodeRow.push(GraphNodeType.WALL);
-    		}
-    		else  {
-    			nodeRow.push(GraphNodeType.OPEN);
-    		}
-    	}
-    	//nodes.push(nodeRow);
-    }*/
-
-
-    return new Graph(nodes);
-};
 
 $(function() {
 
     var $grid = $("#search_grid");
-    var $selectWallFrequency = $("#selectWallFrequency");
-    var $selectGridSize = $("#selectGridSize");
-    var $checkDebug = $("#checkDebug");
-    var $searchDiagonal = $("#searchDiagonal");
 
     var opts = {
-        wallFrequency: $selectWallFrequency.val(),
-        gridSize: $selectGridSize.val(),
-        debug: $checkDebug.is("checked"),
-        diagonal: $searchDiagonal.is("checked")
+        gridSize: 10,
     };
 
     var grid = new GraphSearch($grid, opts, astar.search);
@@ -68,32 +26,6 @@ $(function() {
     $("#btnGenerate").click(function() {
     	grid.initialize();
     });
-
-    $selectWallFrequency.change(function() {
-        grid.setOption({wallFrequency: $(this).val()});
-        grid.initialize();
-    });
-
-    $selectGridSize.change(function() {
-        grid.setOption({gridSize: $(this).val()});
-        grid.initialize();
-    });
-
-    $checkDebug.change(function() {
-        grid.setOption({debug: $(this).is(":checked")});
-    });
-    
-    $searchDiagonal.change(function() {
-        grid.setOption({diagonal: $(this).is(":checked")});
-    });
-    $("#generateWeights").click( function () {
-        if ($("#generateWeights").prop("checked")) {
-            $('#weightsKey').slideDown();
-        } else {
-            $('#weightsKey').slideUp();
-        }
-    });
-
 });
 
 var css = { start: "start", finish: "finish", wall: "wall", active: "active",};
@@ -115,16 +47,15 @@ function pickRandomProperty(obj) {
            
            //log(prop);
         }
-   } // remove it
-   deleteByValue(result);
+    } // remove it
+    deleteByValue(result, obj);
     return result;
 }
 
-function deleteByValue(val) {
-    for(var f in tiles) {
-        if(tiles.hasOwnProperty(f) && tiles[f] == val) {
-            log(tiles[f]);
-            delete tiles[f];
+function deleteByValue(val, obj) {
+    for(var f in tileSet) {
+        if(obj.hasOwnProperty(f) && obj[f] == val) {
+            delete tileSet[f];
             return;
         }
     }
@@ -142,8 +73,18 @@ GraphSearch.prototype.setOption = function(opt) {
         this.drawDebugInfo(opt["debug"]);
     }
 };
-GraphSearch.prototype.initialize = function() {
 
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+}
+
+GraphSearch.prototype.initialize = function() {
+    tileSet = clone(tiles);
     var self = this;
 	this.grid = [];
 	var nodes = [
@@ -180,10 +121,8 @@ GraphSearch.prototype.initialize = function() {
     		$row.append($cell);
     		gridRow.push($cell);
 
-    		//var isWall = Math.floor(Math.random()*(1/self.opts.wallFrequency));
     		if(nodeRow[y] == 0) {
-    			//nodeRow.push(GraphNodeType.WALL);
-                $cell.addClass(pickRandomProperty(tiles));
+                $cell.addClass(pickRandomProperty(tileSet));
                 // make a start
     		}
     		else  {
@@ -191,20 +130,14 @@ GraphSearch.prototype.initialize = function() {
                     $cell.addClass(css.start);
                     startSet = true;
                 }
-                //var cell_weight = ($("#generateWeights").prop("checked") ? (Math.floor(Math.random() * 3)) * 2 + 1 : 1);
-                //nodeRow.push(cell_weight);
-        		//$cell.addClass('weight' + cell_weight);
-                //if ($("#displayWeights").prop("checked")) {$cell.html(cell_weight)};
     		}
     	}
 	    $graph.append($row);
 
-    	this.grid.push(gridRow);
-    	//nodes.push(nodeRow);     
+    	this.grid.push(gridRow);   
     }
 
     this.graph = new Graph(nodes);
-
     // bind cell event, set start/wall positions
     this.$cells = $graph.find(".grid_item");
     this.$cells.click(function() { self.cellClicked($(this)) });

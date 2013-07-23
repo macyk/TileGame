@@ -10,7 +10,8 @@ window.log = function(){
 	}
 };
 
-
+var totalScore = 0;
+var matchingScore = 100;
 var generateRandom = function (width, height, wallFrequency) {
 
 	var nodes = [
@@ -283,7 +284,13 @@ GraphSearch.prototype.cellClicked = function($end) {
             $end.removeClass("color"+star_color);
             $start.removeClass("color"+star_color);
             star_color = -1;
-            $("#message").text("search took " + (fTime-sTime) + "ms.");
+            totalScore += matchingScore;
+            if(totalScore == 1800)
+            {
+                $("#message").text("Great Work!");
+            }else{
+                $("#message").text("Score: " + totalScore);
+            }
             if(this.opts.debug) {
                 this.drawDebugInfo(this.opts.debug);
             }

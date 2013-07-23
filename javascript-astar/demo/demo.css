@@ -138,11 +138,12 @@ pre span.key {
 	width:650px;
 	height:650px;
 	position: relative;
+  background-color: #eee;
 }
 
 .grid_item {
 	display: block;
-	border: 1px solid #000;
+  margin: 1px;
 	float: left;
 	line-height:12px;
 	font-size:10px;
@@ -232,8 +233,8 @@ pre span.key {
   background-color: #ABD1FF;
 }
 .grid_item.start {
-  border-style: dashed;
-  border-color: #fff;
+  margin: 0px;
+  border:dashed 1px #000;
 }
 .grid_item.active {
 	background-color: #ccc;

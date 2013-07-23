@@ -19,6 +19,7 @@ $(function() {
 
     var opts = {
         gridSize: 10,
+        debug: false,
     };
 
     var grid = new GraphSearch($grid, opts, astar.search);

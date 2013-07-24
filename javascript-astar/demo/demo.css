@@ -117,11 +117,13 @@ pre span.key {
 #message {
 	color:#CC6699;
 	font-size:1.2em;
+  text-align: center;
+  width: 50%;
+  margin: auto auto 10px auto;
+  display: block;
 }
 #controls {
-	border: dashed 1px #9999BB;
-	border-left:none;
-	border-right:none;
+	border-bottom: dashed 1px #9999BB;
 	margin-bottom: 25px;
 	padding:5px 0;
 	width:90%;

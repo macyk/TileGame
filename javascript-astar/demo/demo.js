@@ -147,19 +147,38 @@ GraphSearch.prototype.initialize = function() {
 // get the color name string
 function getColorName(obj) {
     var classes = obj.attr("class");
-    var start_index = classes.indexOf("color")+5;
-    var color_code = classes.substring(start_index, start_index+2);
-    return color_code;
+    if(classes){
+        var start_index = classes.indexOf("color")+5;
+        var color_code = classes.substring(start_index, start_index+2);
+        return color_code;
+    }
+    return null;
+};
+
+// is color tile
+function isColorTile(obj) {
+    var classes = obj.attr("class");
+    if(classes){
+        var start_index = classes.indexOf("color");
+        if(start_index == -1){
+            return false;
+        }
+    }
+    return true;
 };
 
 GraphSearch.prototype.cellClicked = function($end) {
-
+    // if this cell has no color, return
+    if(isColorTile($end) == false){
+        return;
+    }
     var end = this.nodeFromElement($end);
     // find the start
     var $start = this.$cells.filter("." + css.start);
-    star_color = getColorName($start);
-
-    var start = this.nodeFromElement($start);
+    if($start != null){
+        star_color = getColorName($start);
+        var start = this.nodeFromElement($start);
+    }
 
     // if there is a start, change it to walkable
     if(start){
@@ -170,8 +189,10 @@ GraphSearch.prototype.cellClicked = function($end) {
         log("clicked on start...", $end);
         return;
     }
-    log("end: "+ end.type);
-    log("start: "+ start.type);
+    if(end && start){
+        log("end: "+ end.type);
+        log("start: "+ start.type);
+    }
     if(end.type == wallNum){
         end.type = pathNum;
         log("new start");
@@ -182,8 +203,12 @@ GraphSearch.prototype.cellClicked = function($end) {
             this.$cells.removeClass(css.start);
             $end.addClass("start");
             // set end type back
-            end.type = 0;
-            start.type = 1;
+            end.type = pathNum;
+            if(start){
+                start.type = wallNum;
+            }
+            var start = this.nodeFromElement($start);
+            $start = this.$cells.filter("." + css.start);
             return;
         }else{
             this.$cells.removeClass(css.finish);
@@ -196,7 +221,8 @@ GraphSearch.prototype.cellClicked = function($end) {
         if(!path || path.length == 0)   {
             $("#message").text("couldn't find a path.");
             this.animateNoPath();
-            end.type = 0; // if there is no path, set back to wall
+            end.type = pathNum; // if there is no path, set back to wall
+            start.type = wallNum;
             this.$cells.removeClass(css.start);
             $end.addClass("start");
             star_color = getColorName($end);
@@ -213,12 +239,28 @@ GraphSearch.prototype.cellClicked = function($end) {
                 $("#message").text("Score: " + totalScore);
             }
             this.animatePath(path);
+            end.type = pathNum;
+            start.type = pathNum;
+            $start = null;
+            start = null;
+            $end = null;
+            end = null;
+            this.$cells.removeClass(css.start);
+            this.$cells.removeClass(css.finish);
         }
     }
 };
 
 GraphSearch.prototype.nodeFromElement = function($cell) {
-    return this.graph.nodes[parseInt($cell.attr("x"))][parseInt($cell.attr("y"))];
+    var x = $cell.attr("x");
+    var y = $cell.attr("y");
+    if(x && y){
+        var element = this.graph.nodes[parseInt(x)][parseInt(y)];
+        if(element){
+            return element;
+        }
+    }
+    return null;
 };
 GraphSearch.prototype.animateNoPath = function() {
     var $graph = this.$graph;

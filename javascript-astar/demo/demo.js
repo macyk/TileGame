@@ -18,6 +18,8 @@ var star_color      = null; // the selected color name
 var gameTime        = 160; // 40 seconds, 4 = 1 second 
 var currentTime     = 0;
 var counter         = null; //1000 will  run it every half second
+var grid;
+var powerUpAddTime  = 80;   // power up gives 20 seconds
 
 // level 0 tiles, 1 empty
 var nodes   = [
@@ -50,24 +52,38 @@ $(function() {
     var opts = {
         gridSize: gameSize,
     };
-    var grid = new GraphSearch($grid, opts, astar.search);
+    grid = new GraphSearch($grid, opts, astar.search);
     $("#btnGenerate").click(function() {
         grid.initialize();
     });
+    $("#btnMoreTime").click(function() {
+        this.disabled = true;
+        this.value = "Used";
+        moreTime();
+    });
 });
 
-function timer()
-{
+function resetPowerUps(){
+     $("#btnMoreTime").removeAttr('disabled');
+     $("#btnMoreTime").attr('value', 'More Time');
+}
+function timer(){
   currentTime=currentTime+1;
-  if (currentTime >= gameTime)
-  {
+  if (currentTime >= gameTime){
      clearInterval(counter);
-     //counter ended, do something here
+     //counter ended
+     timesUp();
      return;
   }
-  drawszlider(gameTime, gameTime - currentTime);
+  updateProgressBar(gameTime, gameTime - currentTime);
 }
 
+function moreTime(){
+    currentTime = currentTime - powerUpAddTime;
+    if(currentTime <= 0){
+        currentTime = 0;
+    }
+}
 
 // pick a random item from an object list, and then remove it
 function pickRandomProperty(obj) {
@@ -112,6 +128,7 @@ function clone(obj) {
 
 // build tiles
 GraphSearch.prototype.initialize = function() {
+    resetPowerUps();
     totalScore  = 0; // reset game score
     star_color  = null; // set start color to null
     tileSet     = clone(tiles);
@@ -316,8 +333,15 @@ GraphSearch.prototype.animatePath = function(path) {
     this.$graph.find("." + css.finish).removeClass(css.finish).addClass(css.start);
 };
 
-function drawszlider(full, current){
+function updateProgressBar(full, current){
     var percentage=Math.round((current*100)/full);
     document.getElementById("progressbar_fill").style.width=percentage+'%';
-    document.getElementById("progressbar_label").innerHTML=percentage+'%';
+    document.getElementById("progressbar_label").innerHTML= "Time Left: "+percentage+'%';
 }
+
+// is color tile
+function timesUp() {
+    if(grid){
+        log('times up!');
+    }
+};

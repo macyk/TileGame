@@ -66,14 +66,16 @@ function resetGame(){
         this.value = "Used";
         moreTime();
     });
-
-     $("#progressbar_label").removeAttr('style');
-}
+    clearInterval(counter);
+    $("#progressbar_label").text('');
+    removeStyle($("#progressbar_label"));
+};
 
 function resetPowerUps(){
      $("#btnMoreTime").removeAttr('disabled');
      $("#btnMoreTime").attr('value', 'More Time');
-}
+};
+
 function timer(){
   currentTime=currentTime+1;
   if (currentTime >= gameTime){
@@ -83,14 +85,15 @@ function timer(){
      return;
   }
   updateProgressBar(gameTime, gameTime - currentTime);
-}
+};
 
 function moreTime(){
     currentTime = currentTime - powerUpAddTime;
     if(currentTime <= 0){
         currentTime = 0;
     }
-}
+    removeStyle($("#progressbar_label"));
+};
 
 // pick a random item from an object list, and then remove it
 function pickRandomProperty(obj) {
@@ -103,7 +106,7 @@ function pickRandomProperty(obj) {
     }
     deleteByValue(result, obj);
     return result;
-}
+};
 
 // remove an item from an object
 function deleteByValue(val, obj) {
@@ -113,7 +116,7 @@ function deleteByValue(val, obj) {
             return;
         }
     }
-}
+};
 
 // search
 function GraphSearch($graph, options, implementation) {
@@ -121,7 +124,7 @@ function GraphSearch($graph, options, implementation) {
     this.search = implementation;
     this.opts = $.extend({wallFrequency:.1, debug:true, gridSize:10}, options);
     //this.initialize();
-}
+};
 
 // clone object value
 function clone(obj) {
@@ -131,7 +134,7 @@ function clone(obj) {
         if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
     }
     return copy;
-}
+};
 
 // build tiles
 GraphSearch.prototype.initialize = function() {
@@ -277,6 +280,7 @@ GraphSearch.prototype.cellClicked = function($end) {
             if(totalScore == 9000)
             {
                 $("#message").text("Great Work!");
+                Win();
             }else{
                 $("#message").text("Score: " + totalScore);
             }
@@ -343,7 +347,7 @@ GraphSearch.prototype.animatePath = function(path) {
 function updateProgressBar(full, current){
     var percentage=Math.round((current*100)/full);
     updateProgress(percentage);
-}
+};
 
 function updateProgress(per){
     $("#progressbar_fill").width(per+'%');
@@ -357,13 +361,25 @@ function updateProgress(per){
         $("#progressbar_label").attr('style','color:#FF3399');
     }
     $("#progressbar_label").text(label);
-}
+};
 
+function removeStyle(obj){
+     obj.removeAttr('style');
+};
 // is color tile
 function timesUp() {
     if(grid){
         $("#search_grid").empty();
-        $("#search_grid").append('<input type="button" id="btnGenerate" value="Start" class="green_button"/>');
+        $("#search_grid").append('<div id="message_box"><h1>Game Over </h1><br><h3>Score: ' +totalScore+'</h3><br><input type="button" id="btnGenerate" value="Start" class="green_button"/></div>');
+        updateProgress(0);
+    }
+    resetGame();
+};
+
+function Win(){
+    if(grid){
+        $("#search_grid").empty();
+        $("#search_grid").append('<div id="message_box"><h1>You Won!</h1><br><h3>Score: ' +totalScore+'</h3><br><input type="button" id="btnGenerate" value="Start" class="green_button"/></div>');
         updateProgress(0);
     }
     resetGame();

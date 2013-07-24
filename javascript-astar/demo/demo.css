@@ -5,7 +5,7 @@ html, body {
 body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     color: #222; 
-    background-color: #ddd;
+    background-color: #fff;
 }
 
 .clearfix {
@@ -139,6 +139,7 @@ pre span.key {
   margin: auto;
   float: left;
 }
+
 #main{
   width: 56%;
   margin: auto;
@@ -159,7 +160,7 @@ pre span.key {
 #btnGenerate{
   display: block;;
   position: relative;
-  top: 40px;
+  top: 200px;
   
 }
 .green_button{
@@ -701,13 +702,13 @@ button.btn.small, input[type="submit"].btn.small {
 #progressbar{
     width:100%;
     height:20px;
-    border:2px solid #fff;
     overflow:hidden;
+    background-color: #eee;
 }
 #progressbar_fill{
     width:100%;
     height:20px;
-    border-right: 1px solid #fff;
+    border-right: 1px solid #ddd;
     background-color: #66FF99 ; 
 }
 #progressbar_label{

@@ -16,7 +16,7 @@ var pathNum         = 1;
 var gameSize        = 10;
 var star_color      = null; // the selected color name
 var gameTime        = 160; // 40 seconds, 4 = 1 second 
-var currentTime     = 0;
+var currentTime     = -1;
 var counter         = null; //1000 will  run it every half second
 var grid;
 var powerUpAddTime  = 80;   // power up gives 20 seconds
@@ -49,10 +49,15 @@ var tiles = {orange: "color00",sky: "color01",navy: "color02",bush: "color03",br
 
 $(function() {
     var $grid = $("#search_grid");
+    $grid.removeAttr('background-color');
     var opts = {
         gridSize: gameSize,
     };
     grid = new GraphSearch($grid, opts, astar.search);
+    resetGame();
+});
+
+function resetGame(){
     $("#btnGenerate").click(function() {
         grid.initialize();
     });
@@ -61,7 +66,9 @@ $(function() {
         this.value = "Used";
         moreTime();
     });
-});
+
+     $("#progressbar_label").removeAttr('style');
+}
 
 function resetPowerUps(){
      $("#btnMoreTime").removeAttr('disabled');
@@ -335,13 +342,29 @@ GraphSearch.prototype.animatePath = function(path) {
 
 function updateProgressBar(full, current){
     var percentage=Math.round((current*100)/full);
-    document.getElementById("progressbar_fill").style.width=percentage+'%';
-    document.getElementById("progressbar_label").innerHTML= "Time Left: "+percentage+'%';
+    updateProgress(percentage);
+}
+
+function updateProgress(per){
+    $("#progressbar_fill").width(per+'%');
+    var label = '';
+    if(per > 0){
+        label = 'Time Left: '+per+'%'
+    }else{
+        label = 'Time\'s Up!';
+    } 
+    if(per == 20){
+        $("#progressbar_label").attr('style','color:#FF3399');
+    }
+    $("#progressbar_label").text(label);
 }
 
 // is color tile
 function timesUp() {
     if(grid){
-        log('times up!');
+        $("#search_grid").empty();
+        $("#search_grid").append('<input type="button" id="btnGenerate" value="Start" class="green_button"/>');
+        updateProgress(0);
     }
+    resetGame();
 };

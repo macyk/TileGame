@@ -9,23 +9,24 @@
 <body>
 	<div id="content">
 		<h1>Matching the Tiles</h1>
-	    <div id="controls" class='clear'>
-	    		<input type="button" id="btnGenerate" value="Generate New Map" />	    		
-				<br />
-		<span id="message">Click on a grid position to search</span>
-	    </div>
-
 	    <div id="main">
-	    	<div id="search_grid">Loading grid...</div>
-	    </div>
-
-	</div>
-	<div id="footer"></div>
-
+	    	<div id="search_grid">
+	    		<input type="button" id="btnGenerate" value="Start" />	
+	    	</div>
+	    	<div id="controls" class='clear'>
+				<h3>Timer</h3>
+				<div id="progressbar">
+				    <div id="progressbar_fill">
+				    </div>
+				    <div id="progressbar_label">
+				    </div>
+				</div>
+				<span id="message">Select the same color that can connect together!</span>
+		    </div>
+		    </div>
 	<script type='text/javascript' src='jquery-1.7.1.min.js'></script>
 	<script type='text/javascript' src='../graph.js'></script>
 	<script type='text/javascript' src='../astar.js'></script>
-	<!--<script type='text/javascript' src='../dist/astar-concat.js'></script>-->
 	<script type='text/javascript' src='demo.js'></script>
 </body>
 </html>

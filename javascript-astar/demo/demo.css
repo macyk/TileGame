@@ -56,29 +56,17 @@ h2 {
 }
 #content h1 {
   text-align: center;
+  color: #CC6699;
 }
-#header, #footer {
-	background:#ddf;
-}
+
 #header h1 {
     margin:0;
     float:left;
-    margin-bottom: 10px;
-    margin-left: 5px;
 }
 #header {
 	border-bottom:solid 8px #333;
 	margin-bottom:15px;
     position: relative;
-}
-#footer {
-	border-top:solid 2px #fff;
-	margin-top:20px;
-	padding-top:5px;
-}
-#header a, #footer a {
-	font-size:.9em;
-    font-family: Georgia;
 }
 ul.basics {
 	list-style-type:none;
@@ -127,11 +115,11 @@ pre span.key {
 }
 
 #message {
-	color:#f00;
+	color:#CC6699;
 	font-size:1.2em;
 }
 #controls {
-	border: dashed 3px #9999BB;
+	border: dashed 1px #9999BB;
 	border-left:none;
 	border-right:none;
 	margin-bottom: 25px;
@@ -140,15 +128,33 @@ pre span.key {
   margin-left: auto ;
   margin-right: auto ;
 }
+#controls h3{
+  margin: 0px;
+  color: #CC6699;
+}
 #search_grid  {
-	width:650px;
-	height:650px;
+	width:600px;
+	height:600px;
 	position: relative;
   background-color: #eee;
-  margin-left: auto ;
-  margin-right: auto ;
+  margin: auto;
 }
 
+#btnGenerate{
+  font-size: 20px;
+  color: #fff;
+  background-color: #66FF99;
+  border: #fff solid 2px;
+  display: block;;
+  margin: auto;
+  position: relative;
+  top: 40px;
+  width: 30%;
+}
+
+#btnGenerate:hover{
+  background-color: #CC6699;
+}
 .grid_item {
 	display: block;
   margin: 1px;
@@ -671,4 +677,27 @@ button.btn.small, input[type="submit"].btn.small {
 }
 .btn {
     text-decoration: underline;
+}
+
+/* progress bar */
+#progressbar{
+    width:100%;
+    height:20px;
+    border:2px solid #fff;
+    overflow:hidden; 
+}
+#progressbar_fill{
+    width:100%;
+    height:20px;
+    border-right: 1px solid #fff;
+    background-color: #66FF99 ; 
+}
+#progressbar_label{
+    color: #fff;
+    font-size: 15px;
+    font-style: italic;
+    font-weight: bold;
+    left: 25px;
+    position: relative;
+    top: -20px; 
 }

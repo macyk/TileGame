@@ -15,6 +15,9 @@ var wallNum         = 0;
 var pathNum         = 1;
 var gameSize        = 10;
 var star_color      = null; // the selected color name
+var gameTime        = 160; // 40 seconds, 4 = 1 second 
+var currentTime     = 0;
+var counter         = null; //1000 will  run it every half second
 
 // level 0 tiles, 1 empty
 var nodes   = [
@@ -53,6 +56,19 @@ $(function() {
     });
 });
 
+function timer()
+{
+  currentTime=currentTime+1;
+  if (currentTime >= gameTime)
+  {
+     clearInterval(counter);
+     //counter ended, do something here
+     return;
+  }
+  drawszlider(gameTime, gameTime - currentTime);
+}
+
+
 // pick a random item from an object list, and then remove it
 function pickRandomProperty(obj) {
     var result;
@@ -81,7 +97,7 @@ function GraphSearch($graph, options, implementation) {
     this.$graph = $graph;
     this.search = implementation;
     this.opts = $.extend({wallFrequency:.1, debug:true, gridSize:10}, options);
-    this.initialize();
+    //this.initialize();
 }
 
 // clone object value
@@ -101,7 +117,9 @@ GraphSearch.prototype.initialize = function() {
     tileSet     = clone(tiles);
     var self    = this;
 	this.grid   = [];
-	var $graph = this.$graph;
+    currentTime = 0;
+    counter     = setInterval(timer, 250);
+	var $graph  = this.$graph;
 
 	$graph.empty();
 
@@ -298,4 +316,8 @@ GraphSearch.prototype.animatePath = function(path) {
     this.$graph.find("." + css.finish).removeClass(css.finish).addClass(css.start);
 };
 
-
+function drawszlider(full, current){
+    var percentage=Math.round((current*100)/full);
+    document.getElementById("progressbar_fill").style.width=percentage+'%';
+    document.getElementById("progressbar_label").innerHTML=percentage+'%';
+}

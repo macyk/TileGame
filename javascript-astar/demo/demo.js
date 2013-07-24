@@ -36,7 +36,7 @@ var nodes   = [
     ];
 
 // styles for game play
-var css = { start: "start", finish: "finish", wall: "wall", active: "active",};
+var css = { start: "start", finish: "finish", wall: "wall", active: "active", hint :"hint",};
 // styles for tiles
 var tiles = {orange: "color00",sky: "color01",navy: "color02",bush: "color03",brown: "color04",
             grape: "color05", green: "color06",blue: "color07",red: "color08",yellow: "color09",
@@ -46,6 +46,8 @@ var tiles = {orange: "color00",sky: "color01",navy: "color02",bush: "color03",br
             grape_2: "color05", green_2: "color06",blue_2: "color07",red_2: "color08",yellow_2: "color09",
             purple_2: "color10",pink_2: "color11",grey_2: "color12",fog_2: "color13",cold_2: "color14",
             lime_2: "color15",mint_2: "color16",candy_2: "color17",};
+
+var gameTiles = [];
 
 $(function() {
     var $grid = $("#search_grid");
@@ -66,11 +68,44 @@ function resetGame(){
         this.value = "Used";
         moreTime();
     });
+    $("#btnHint").click(function() {
+        grid.showHint();
+    });
     clearInterval(counter);
     $("#progressbar_label").text('');
     removeStyle($("#progressbar_label"));
 };
 
+GraphSearch.prototype.showHint = function(){
+    if(gameTiles.length > 0){
+        var arrayLength = gameTiles.length;
+        for(var i = 0; i< arrayLength; i++){
+            for(var j = 0; j< arrayLength; j++){
+                if(isColorTile(gameTiles[i]) && isColorTile(gameTiles[j])){
+                    if((gameTiles[i].attr('y') == gameTiles[j].attr('y')) && (gameTiles[i].attr('x') == gameTiles[j].attr('x'))){
+
+                    }else{
+                        var x = this.nodeFromElement(gameTiles[i]);
+                        x.style = pathNum;
+                        var y = this.nodeFromElement(gameTiles[j]);
+                        y.style = pathNum;
+                        var path = this.search(this.graph.nodes, gameTiles[i], gameTiles[j], this.opts.diagonal);
+                        log(gameTiles[i],gameTiles[j]);
+                        //x.style = wallNum;
+                        //y.style = wallNum;
+                        if(path.length >0){
+                            gameTiles[i].addClass(css.hint);
+                            gameTiles[j].addClass(css.hint);
+                            log(gameTiles[i].attr('y')+', '+gameTiles[i].attr('x')+
+                             ' '+ gameTiles[j].attr('y')+', '+gameTiles[j].attr('x'));
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 function resetPowerUps(){
      $("#btnMoreTime").removeAttr('disabled');
      $("#btnMoreTime").attr('value', 'More Time');
@@ -177,6 +212,7 @@ GraphSearch.prototype.initialize = function() {
                     startSet = true;
                 }
     		}
+            gameTiles.push($cell);
     	}
 	    $graph.append($row);
 

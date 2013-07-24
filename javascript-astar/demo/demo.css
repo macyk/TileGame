@@ -192,6 +192,11 @@ pre span.key {
 	line-height:12px;
 	font-size:10px;
 }
+/* brown */
+.grid_item.hint{
+  border: 1px dotted red;
+  margin: 0px;
+}
 .grid_item.wall {
   background-color: #000000;
 }
